@@ -1,0 +1,76 @@
+table us-states
+	lineageTag: 68c3bc6b-bd96-4fb6-9ecc-d06a93249b73
+
+	column State
+		dataType: string
+		lineageTag: 824b4f96-e83b-4eaf-8747-6446df2dae2c
+		summarizeBy: none
+		sourceColumn: State
+
+		annotation SummarizationSetBy = Automatic
+
+	column Abbreviation
+		dataType: string
+		lineageTag: f02eaaa0-4644-4bdf-bd09-c8184cf129a0
+		summarizeBy: none
+		sourceColumn: Abbreviation
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Census Division'
+		dataType: string
+		lineageTag: 351425a2-3963-4a42-b7a4-56b72d682ef9
+		summarizeBy: none
+		sourceColumn: Census Division
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Census Region'
+		dataType: string
+		lineageTag: 2ef39095-6228-43da-a2f1-fbc2538108b1
+		summarizeBy: none
+		sourceColumn: Census Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column '2015 Population' =
+			
+			CALCULATE(
+			    SUM('us-states-population-by-year'[Population]),
+			    'us-states-population-by-year'[Year] = 2015
+			)
+		formatString: #,0
+		lineageTag: ae58638b-33e7-48c7-8f3c-b8410a99ec72
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy 'Census Areas'
+		lineageTag: 30943a6f-685f-4e46-bd0c-f0ce3f20266f
+
+		level 'Census Region'
+			lineageTag: d45c9a7b-8ca9-456d-8296-e5a573fd992a
+			column: 'Census Region'
+
+		level 'Census Division'
+			lineageTag: 1f2fe234-2363-4108-9297-9541c2e5cfd9
+			column: 'Census Division'
+
+	partition us-states = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\Josh\OneDrive - UMass Lowell\Learning Industry Stuff\EdX\edx-power-bi-exercise-files\Week 1\us-states.csv"),[Delimiter=",", Columns=17, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"id", Int64.Type}, {"name", type text}, {"abbreviation", type text}, {"country", type text}, {"type", type text}, {"sort", Int64.Type}, {"status", type text}, {"occupied", type text}, {"notes", type text}, {"fips_state", Int64.Type}, {"assoc_press", type text}, {"standard_federal_region", type text}, {"census_region", Int64.Type}, {"census_region_name", type text}, {"census_division", Int64.Type}, {"census_division_name", type text}, {"circuit_court", type text}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"name", "abbreviation", "census_region_name", "census_division_name"}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Removed Other Columns",{"name", "abbreviation", "census_division_name", "census_region_name"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Reordered Columns",{{"census_division_name", "Census Division"}, {"census_region_name", "Census Region"}, {"abbreviation", "Abbreviation"}, {"name", "State"}}),
+				    #"Reordered Columns1" = Table.ReorderColumns(#"Renamed Columns",{"Census Region", "Census Division", "State", "Abbreviation"})
+				in
+				    #"Reordered Columns1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

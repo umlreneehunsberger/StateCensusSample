@@ -1,0 +1,9 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "c21a1f81c96301d8e809",
+  "displayName": "Pop.tooltip",
+  "displayOption": "ActualSize",
+  "height": 240,
+  "width": 320,
+  "type": "Tooltip"
+}

@@ -1,0 +1,128 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "50d354b7428693a00339",
+  "position": {
+    "x": 13.333333333333334,
+    "y": 0,
+    "z": 3000,
+    "height": 88.333333333333343,
+    "width": 640,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "HierarchyLevel": {
+                  "Expression": {
+                    "Hierarchy": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "us-states"
+                        }
+                      },
+                      "Hierarchy": "Census Areas"
+                    }
+                  },
+                  "Level": "Census Region"
+                }
+              },
+              "queryRef": "us-states.Census Areas.Census Region",
+              "nativeQueryRef": "Census Areas Census Region",
+              "active": true
+            },
+            {
+              "field": {
+                "HierarchyLevel": {
+                  "Expression": {
+                    "Hierarchy": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "us-states"
+                        }
+                      },
+                      "Hierarchy": "Census Areas"
+                    }
+                  },
+                  "Level": "Census Division"
+                }
+              },
+              "queryRef": "us-states.Census Areas.Census Division",
+              "nativeQueryRef": "Census Areas Census Division",
+              "active": false
+            }
+          ]
+        }
+      }
+    },
+    "expansionStates": [
+      {
+        "roles": [
+          "Values"
+        ],
+        "levels": [
+          {
+            "queryRefs": [
+              "us-states.Census Areas.Census Region"
+            ],
+            "isCollapsed": true,
+            "identityKeys": [
+              {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "us-states"
+                    }
+                  },
+                  "Property": "Census Region"
+                }
+              }
+            ],
+            "isPinned": true
+          },
+          {
+            "queryRefs": [
+              "us-states.Census Areas.Census Division"
+            ],
+            "isCollapsed": true,
+            "isPinned": true
+          }
+        ],
+        "root": {}
+      }
+    ],
+    "objects": {
+      "data": [
+        {
+          "properties": {
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "orientation": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

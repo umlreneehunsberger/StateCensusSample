@@ -1,0 +1,80 @@
+table _Measures
+	isHidden
+	lineageTag: 36b67043-7efc-4bd9-a98d-1413eff0074c
+
+	measure States = COUNT('us-states'[State])
+		formatString: 0
+		lineageTag: e17405d6-9f6f-4eec-853e-e3ee1d872632
+
+	measure Population = SUM('us-states-population-by-year'[Population])
+		formatString: #,0
+		lineageTag: 3bdd4b11-f09f-477f-9112-532a1e3741dc
+
+	measure 'Tooltip Title' = ```
+			
+			SELECTEDVALUE('us-states'[State]) & " - Years "  
+			    & MIN('us-states-population-by-year'[Year]) & "-"
+			    & Max('us-states-population-by-year'[Year])
+			```
+		lineageTag: e74413b3-443c-4ba4-8992-3fa921b32c24
+
+	measure 'Begin Pop' =
+			
+			CALCULATE(
+			    [Population],
+			    'us-states-population-by-year'[Year] = MIN('us-states-population-by-year'[Year]
+			))
+		formatString: #,0
+		lineageTag: fb687fcd-d842-4bf1-bac3-15d7cb6a4dcf
+
+	measure 'End Pop' =
+			
+			CALCULATE(
+			    [Population],
+			    'us-states-population-by-year'[Year] = MAX('us-states-population-by-year'[Year]
+			))
+		formatString: #,0
+		lineageTag: 80034428-7068-4a9c-9c9e-527001bd2d47
+
+	measure 'Growth Rate' = ```
+			
+			DIVIDE([End Pop] - [Begin Pop], [Begin Pop], 0)
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 7bbf92a0-8b0c-4e16-a48a-e9c82bc3f47f
+
+	measure 'Table Title' = ```
+			"Population Growth by State from "  
+			    & MIN('us-states-population-by-year'[Year]) & " to "
+			    & Max('us-states-population-by-year'[Year])
+			
+			```
+		lineageTag: defa08da-3ddb-43b6-b07a-8b88da9884a5
+
+	column _
+		dataType: string
+		isHidden
+		lineageTag: 3c388688-2424-40fa-95d8-f0a1d5cdf532
+		summarizeBy: none
+		sourceColumn: _
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [_ = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"_", type text}})
+				in
+				    #"Changed Type"
+
+	changedProperty = IsHidden
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

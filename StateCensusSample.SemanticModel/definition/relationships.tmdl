@@ -1,0 +1,4 @@
+relationship AutoDetected_3c438ccd-09f9-4dcd-835e-74cbeeb2ffab
+	fromColumn: us-states-population-by-year.Abbreviation
+	toColumn: us-states.Abbreviation
+
